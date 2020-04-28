@@ -1,0 +1,7 @@
+venv
+config.toml
+creds/*
+*.db
+.vscode
+__pycache__
+tags

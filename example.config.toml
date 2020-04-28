@@ -1,0 +1,12 @@
+[toggl]
+api_token = "get this token from toggl"
+workspace = "the workspace you want tracked"
+
+[google_api]
+spreadsheet_id = "The google sheet that you need"
+credentials_file = "creds/credentials.json"
+token_file = "creds/token.pickle"
+
+[local]
+sqlite_db = "timewarp.db"
+bootstrap = true
