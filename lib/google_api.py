@@ -1,6 +1,7 @@
 import os
 import pickle
 from datetime import datetime
+from itertools import product
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -13,11 +14,19 @@ class GoogleAPI:
         "https://www.googleapis.com/auth/spreadsheets",
     ]
 
-    def __init__(self, sheet_id, credentials_file, token_file):
-        self._project_sheet = "Projects!A5:B"
+    def __init__(
+        self,
+        spreadsheet_id,
+        credentials_file,
+        token_file,
+        project_sheet="Projects!A5:B",
+        time_sheet="timesheet!A2:D",
+    ):
+        self._project_sheet = project_sheet
+        self._time_sheet = time_sheet
         self._credentails_file = credentials_file
         self._token_file = token_file
-        self._sheet_id = sheet_id
+        self._sheet_id = spreadsheet_id
         self._creds = self._get_creds()
 
     def _get_creds(self):
@@ -48,7 +57,8 @@ class GoogleAPI:
         sheet = service.spreadsheets()
         return sheet.values().get(spreadsheetId=self._sheet_id, range=range).execute()
 
-    def get_projects(self):
+    @property
+    def projects(self):
         """
         get all the projects
         """
@@ -59,6 +69,16 @@ class GoogleAPI:
                 projects["tasks"].append(i[1])
             projects["projects"].append(i[0])
         return projects
+
+    @property
+    def available_projects(self):
+        sheets_projects = self.projects
+        return [
+            {"id": i, "name": " | ".join(v)}
+            for i, v in enumerate(
+                product(sheets_projects["projects"], sheets_projects["tasks"])
+            )
+        ]
 
     def get_time_sheets(self):
         result = self._run_get_query(range="timesheet!A2:D")
@@ -72,7 +92,7 @@ class GoogleAPI:
         Append values to the timesheet
         """
         service = build("sheets", "v4", credentials=self._creds)
-        body = {"range": "timesheet!A2:D", "values": data}
+        body = {"range": self._time_sheet, "values": data}
 
         # Call the Sheets API
         sheet = service.spreadsheets()
@@ -87,3 +107,8 @@ class GoogleAPI:
             .execute()
         )
         return result.get("values", [])
+
+    @property
+    def last_entered_date(self):
+        current_timesheets = self.get_time_sheets()
+        return current_timesheets[-1][0]

@@ -1,10 +1,5 @@
 import sqlite3
-from .schema import (
-    PROJECT_SCHEMA,
-    WORKSPACE_SCHEMA,
-    TIME_ENTRIES_SCHEMA,
-    PROJECT_NAME_SCHEMA,
-)
+from .schema import SCHEMA
 
 
 def dict_factory(cursor, row):
@@ -48,10 +43,36 @@ def insert_table(conn, table_name, rows):
         conn.execute(*query)
 
 
-def bootstrap(db_name):
-    conn = sqlite3.connect(db_name)
-    conn.execute(create_table_query("workspace", WORKSPACE_SCHEMA))
-    conn.execute(create_table_query("project", PROJECT_SCHEMA))
-    conn.execute(create_table_query("time_entries", TIME_ENTRIES_SCHEMA))
-    conn.execute(create_table_query("project_name", PROJECT_NAME_SCHEMA))
-    conn.commit()
+def truncate_table(conn, table_name):
+    conn.execute(f"DROP TABLE {table_name}")
+    conn.execute(create_table_query(table_name, SCHEMA[table_name]))
+
+
+class Database:
+    def __init__(self, db_name):
+        self._db_name = db_name
+
+    def bootstrap(self):
+        with sqlite3.connect(self._db_name) as conn:
+            conn.execute(create_table_query("workspace", SCHEMA["workspace"]))
+            conn.execute(create_table_query("project", SCHEMA["project"]))
+            conn.execute(create_table_query("time_entries", SCHEMA["time_entries"]))
+            conn.execute(create_table_query("project_name", SCHEMA["project_name"]))
+
+    def get_latest_time_entries(self, start_time, row_factory=dict_factory):
+        with sqlite3.connect(self._db_name) as conn:
+            conn.row_factory = dict_factory
+            data = conn.execute(
+                f"""
+                SELECT start, duration, name
+                FROM time_entries LEFT JOIN project ON pid=project.id
+                WHERE DATE(start) > ? AND name IN (SELECT name FROM project_name);
+                """,
+                (start_time,),
+            ).fetchall()
+        return data
+
+    def update_table(self, table, values):
+        with sqlite3.connect(self._db_name) as conn:
+            truncate_table(conn, table)
+            insert_table(conn, table, values)

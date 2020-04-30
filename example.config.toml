@@ -1,12 +1,14 @@
 [toggl]
-api_token = "get this token from toggl"
+api_token = "<get the token from toggl>"
 workspace = "the workspace you want tracked"
 
 [google_api]
-spreadsheet_id = "The google sheet that you need"
+spreadsheet_id = "<insert the long ass sheet id>"
 credentials_file = "creds/credentials.json"
 token_file = "creds/token.pickle"
+project_sheet="Projects!A5:B"
+time_sheet="timesheet!A2:D"
+
 
 [local]
-sqlite_db = "timewarp.db"
-bootstrap = true
+sqlite_db = "timewriggler.db"
