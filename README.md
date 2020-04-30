@@ -7,11 +7,11 @@ _Works on the streets, freak in the sheets._
 
 ## Testimonials
 
-"Wow! It worked just like that?" - _Ashton - core developer_
+"Wow! It worked just like that?" - _Ashton: core developer_
 
-"It's really basic and needs a lot of work." - _Ashton - core developer_
+"It's really basic and needs a lot of work." - _Ashton: core developer_
 
-"You probably should use this with caution, I haven't tested it a whole lot." - _Ashton - core developer_
+"You probably should use this with caution, I haven't tested it a whole lot." - _Ashton: core developer_
 
 ## How to use
 
