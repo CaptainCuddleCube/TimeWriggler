@@ -4,10 +4,10 @@ import os
 import argparse
 import toml
 
-from lib.api import TimesheetAPI
-from lib.db import Database
-from lib.google_api import GoogleAPI
-from lib.utils import group_by_date, get_workspace_id
+from tw_lib.api import TimesheetAPI
+from tw_lib.db import Database
+from tw_lib.google_api import GoogleAPI
+from tw_lib.utils import group_by_date, get_workspace_id
 
 parser = argparse.ArgumentParser(
     description="TimeWriggler - your one stop time-sheeter"

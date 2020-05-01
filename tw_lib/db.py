@@ -10,23 +10,8 @@ def dict_factory(cursor, row):
 
 
 # Should rather use not nulls
-def create_table_query(table_name, table_dict):
-    create_table = f"CREATE TABLE {table_name} ("
-    for k, v in table_dict.items():
-        if k == "id":
-            create_table += f"ID INT PRIMARY KEY NOT NULL "
-        else:
-            if type(v) == str:
-                create_table += f", {k} TEXT"
-            elif type(v) == int:
-                create_table += f", {k} INT"
-            elif type(v) == float:
-                create_table += f", {k} REAL"
-            elif type(v) == bool:
-                create_table += f", {k} BOOL"
-            else:
-                create_table += f", {k} TEXT"
-    create_table += ");"
+def create_table_query(table_name, table_cols):
+    create_table = f"CREATE TABLE {table_name} ({','.join(table_cols)})"
     return create_table
 
 
@@ -54,10 +39,8 @@ class Database:
 
     def bootstrap(self):
         with sqlite3.connect(self._db_name) as conn:
-            conn.execute(create_table_query("workspace", SCHEMA["workspace"]))
-            conn.execute(create_table_query("project", SCHEMA["project"]))
-            conn.execute(create_table_query("time_entries", SCHEMA["time_entries"]))
-            conn.execute(create_table_query("project_name", SCHEMA["project_name"]))
+            for table, schema in SCHEMA.items():
+                conn.execute(create_table_query(table, schema))
 
     def get_latest_time_entries(self, start_time, row_factory=dict_factory):
         with sqlite3.connect(self._db_name) as conn:
