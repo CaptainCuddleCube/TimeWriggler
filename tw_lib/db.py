@@ -3,17 +3,13 @@ import sqlite3
 from .schema import SCHEMA
 
 
-def dict_factory(cursor, row):
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
+def dict_factory(cur, row):
+    return {col[0]: row[i] for i, col in enumerate(cur.description)}
 
 
 # Should rather use not nulls
 def create_table_query(table_name, table_cols):
-    create_table = f"CREATE TABLE {table_name} ({','.join(table_cols)})"
-    return create_table
+    return f"CREATE TABLE {table_name} ({','.join(table_cols)})"
 
 
 # Should rather use values and specify the rows
