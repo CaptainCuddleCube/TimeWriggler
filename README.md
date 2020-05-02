@@ -19,6 +19,13 @@ _Works on the streets, freak in the sheets._
 
 ## How to use
 
+### Requirements
+
+- Python3, and I've only tested it with python3.7, so, ja, good luck.
+- A computer.
+- An internet connection.
+- A Toggl [account](https://toggl.com/) (it's are free you cheapskate).
+
 ### Setting up your Toggl projects
 
 The way TimeWriggler works, is it expects you to name your Toggl project `<google-sheets project> | <google-sheets task>`.
@@ -50,7 +57,7 @@ usage: timewriggler.py [-h] [--update_projects] [--bootstrap] [--dry_run]
                        [--preserve_time_entries] [--round_up]
                        [--config CONFIG]
 
-TimeWriggler - your one stop time-sheeter
+TimeWriggler - sheet out of Toggl into Google sheets.
 
 optional arguments:
   -h, --help            show this help message and exit
