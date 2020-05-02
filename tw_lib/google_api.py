@@ -15,12 +15,7 @@ class GoogleAPI:
     ]
 
     def __init__(
-        self,
-        spreadsheet_id,
-        credentials_file,
-        token_file,
-        project_sheet="Projects!A5:B",
-        time_sheet="timesheet!A2:D",
+        self, spreadsheet_id, credentials_file, token_file, project_sheet, time_sheet,
     ):
         self._project_sheet = project_sheet
         self._time_sheet = time_sheet

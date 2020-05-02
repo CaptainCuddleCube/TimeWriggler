@@ -11,4 +11,8 @@ time_sheet="timesheet!A2:D"
 
 
 [local]
-sqlite_db = "timewriggler.db"
+## If you want to persist your sqlitedb:
+# sqlite_db = "timewriggler.db"
+
+## If you want to store things in memory:
+sqlite_db = "file::memory:?cache=shared"

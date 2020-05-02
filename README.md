@@ -13,6 +13,10 @@ _Works on the streets, freak in the sheets._
 
 "You probably should use this with caution, I haven't tested it a whole lot." - _Ashton: core developer_
 
+"That is the best README!! 😂 hahaha nice man" - _Seem: core developer's friend_
+
+"That's nice sweetie." - _core developer's mom_
+
 ## How to use
 
 ### Setting up your Toggl projects
@@ -32,6 +36,9 @@ Keep that `credentials.json` super safe - like the `creds/` directory (which is 
 
 TimeWriggler uses TOML for its configuration, and you can see an example of this in `example.config.toml`. Once you have
 all the values needed to run your config - just rename it to `config.toml` and you will be good to go.
+
+By default, you should just leave the sqlite3 db as an in-memory database - that way is should clean itself up when done.
+If, however, you have a massive number of projects, or you want to persist things, then opt to use a stored database.
 
 ### Running
 

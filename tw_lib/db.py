@@ -1,3 +1,4 @@
+import os
 import sqlite3
 from .schema import SCHEMA
 
@@ -34,8 +35,25 @@ def truncate_table(conn, table_name):
 
 
 class Database:
-    def __init__(self, db_name):
+    def __init__(self, db_name, bootstrap=False):
         self._db_name = db_name
+        # If an in memory db is used we need to keep a connection alive.
+        if not os.path.exists(db_name):
+            bootstrap = True
+        elif bootstrap:
+            os.remove(db_name)
+
+        self._conn = sqlite3.connect(db_name)
+        self.new_db = False
+        if bootstrap:
+            print("Bootstrapping...")
+            self.bootstrap()
+            self.new_db = True
+
+    def __del__(self):
+        "Commiting and removing the last connection."
+        self._conn.commit()
+        self._conn.close()
 
     def bootstrap(self):
         with sqlite3.connect(self._db_name) as conn:
