@@ -57,7 +57,7 @@ usage: timewriggler.py [-h] [--update_projects] [--bootstrap] [--dry_run]
                        [--preserve_time_entries] [--round_up]
                        [--config CONFIG]
 
-TimeWriggler - sheet out of Toggl into Google sheets.
+TimeWriggler - helping you sheet toggl into google.
 
 optional arguments:
   -h, --help            show this help message and exit

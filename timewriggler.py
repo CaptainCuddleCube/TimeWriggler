@@ -10,7 +10,7 @@ from tw_lib.google_api import GoogleAPI
 from tw_lib.utils import group_by_date, get_workspace_id
 
 parser = argparse.ArgumentParser(
-    description="TimeWriggler - sheet out of Toggl into Google sheets."
+    description="TimeWriggler - Helping you sheet Toggl into Google."
 )
 
 parser.add_argument(
