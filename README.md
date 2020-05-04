@@ -24,7 +24,7 @@ _Works on the streets, freak in the sheets._
 - Python3, and I've only tested it with python3.7, so, ja, good luck.
 - A computer.
 - An internet connection.
-- A Toggl [account](https://toggl.com/) (it's are free you cheapskate).
+- A Toggl [account](https://toggl.com/) (it is free, you cheapskate).
 
 ### Setting up your Toggl projects
 
