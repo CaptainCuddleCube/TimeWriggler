@@ -36,7 +36,7 @@ If your `project | task` do not feature in the google sheet - **they will not be
 ### Getting Google application settings
 
 To use TimeWriggler, you will need to setup a Google API Project, and get yourself a `credentials.json`,
-which you can create [here](https://console.developers.google.com/flows/enableapi?apiid=appsactivity&credential=client_key).
+which you can create [here](https://console.developers.google.com/flows/enableapi?apiid=appsactivity&credential=client_key), or via the [express-route](https://developers.google.com/sheets/api/quickstart/python) (recommended).
 Keep that `credentials.json` super safe - like the `creds/` directory (which is git ignored for your convenience).
 
 ### Configuration
