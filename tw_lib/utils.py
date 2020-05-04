@@ -3,10 +3,10 @@ from .db import insert_table, truncate_table
 from math import ceil, isclose
 
 
-def group_by_date(data, round_up=False):
+def group_by_date(data, date_format, round_up=False):
     group_by_date = {}
     for entry in data:
-        date = datetime.fromisoformat(entry["start"]).date().strftime("%d %b %Y")
+        date = datetime.fromisoformat(entry["start"]).date().strftime(date_format)
         if date in group_by_date:
             group_by_date[date][-1] += entry["duration"] / 60 / 60
         else:

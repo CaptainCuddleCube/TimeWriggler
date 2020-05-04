@@ -77,7 +77,9 @@ if args.update_projects or db.new_db:
 print("Thumbing your Toggl timesheets into google sheet format...")
 
 grouped = group_by_date(
-    db.get_latest_time_entries(g_api.last_entered_date), args.round_up
+    db.get_latest_time_entries(g_api.last_entered_date),
+    settings["google_api"]["date_format"],
+    args.round_up,
 )
 published_values = list(grouped.values())
 

@@ -8,7 +8,7 @@ credentials_file = "creds/credentials.json"
 token_file = "creds/token.pickle"
 project_sheet="Projects!A5:B"
 time_sheet="timesheet!A2:D"
-
+date_format ="%Y-%m-%d"
 
 [local]
 ## If you want to persist your sqlitedb:

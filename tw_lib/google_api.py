@@ -1,6 +1,6 @@
 import os
 import pickle
-from datetime import datetime
+from datetime import datetime, timedelta
 from itertools import product
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -15,7 +15,13 @@ class GoogleAPI:
     ]
 
     def __init__(
-        self, spreadsheet_id, credentials_file, token_file, project_sheet, time_sheet,
+        self,
+        spreadsheet_id,
+        credentials_file,
+        token_file,
+        project_sheet,
+        time_sheet,
+        date_format,
     ):
         self._project_sheet = project_sheet
         self._time_sheet = time_sheet
@@ -23,6 +29,7 @@ class GoogleAPI:
         self._token_file = token_file
         self._sheet_id = spreadsheet_id
         self._creds = self._get_creds()
+        self._date_format = date_format
 
     def _get_creds(self):
         creds = None
@@ -79,7 +86,7 @@ class GoogleAPI:
         result = self._run_get_query(range="timesheet!A2:D")
         values = result.get("values", [])
         for i in values:
-            i[0] = datetime.strptime(i[0], "%d %b %Y").isoformat()
+            i[0] = datetime.strptime(i[0], self._date_format).isoformat()
         return values
 
     def append_to_time_sheets(self, data):
@@ -106,4 +113,9 @@ class GoogleAPI:
     @property
     def last_entered_date(self):
         current_timesheets = self.get_time_sheets()
+        if len(current_timesheets) == 0:
+            now = datetime.now().date()
+            return (
+                datetime(year=now.year, month=now.month, day=1) - timedelta(days=1)
+            ).strftime(self._date_format)
         return current_timesheets[-1][0]
