@@ -110,12 +110,14 @@ class GoogleAPI:
         )
         return result.get("values", [])
 
-    @property
-    def last_entered_date(self):
+    def last_entered_date(self, default_datetime=None):
         current_timesheets = self.get_time_sheets()
         if len(current_timesheets) == 0:
+            if default_datetime:
+                return default_datetime.strftime(self._date_format)
             now = datetime.now().date()
             return (
                 datetime(year=now.year, month=now.month, day=1) - timedelta(days=1)
             ).strftime(self._date_format)
+
         return current_timesheets[-1][0]

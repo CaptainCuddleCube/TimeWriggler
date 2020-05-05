@@ -3,12 +3,11 @@
 import argparse
 import os
 import toml
-from datetime import datetime
 
 from tw_lib.api import TimesheetAPI
 from tw_lib.db import Database
 from tw_lib.google_api import GoogleAPI
-from tw_lib.utils import group_by_date, get_workspace_id
+from tw_lib.utils import group_by_date, get_workspace_id, parse_iso
 
 parser = argparse.ArgumentParser(
     description="TimeWriggler - Helping you sheet Toggl into Google."
@@ -50,6 +49,13 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    "--round_to_nearest",
+    default=None,
+    type=float,
+    help="This will round the value up to the nearest value you specified.",
+)
+
+parser.add_argument(
     "--config",
     default="config.toml",
     help="If you want to store your config somewhere else.",
@@ -68,7 +74,7 @@ SQLITE_DB = settings["local"]["sqlite_db"]
 TOGGL = settings["toggl"]
 GOOGLE_SETTINGS = settings["google_api"]
 WORKSPACE = TOGGL["workspace"]
-START_DATE = args.start_date
+START_DATE = parse_iso(args.start_date) if args.start_date else None
 
 api = TimesheetAPI(TOGGL["api_token"])
 g_api = GoogleAPI(**GOOGLE_SETTINGS)
@@ -76,7 +82,9 @@ db = Database(SQLITE_DB, bootstrap=args.bootstrap)
 
 if not args.preserve_time_entries or db.new_db:
     print("Updating the time entries...")
-    db.update_table("time_entries", api.get_time_entries(start_date=START_DATE))
+    db.update_table(
+        "time_entries", api.get_time_entries(start_date=START_DATE.isoformat())
+    )
 if args.update_projects or db.new_db:
     print("Updating the projects...")
     db.update_table("project", api.get_projects(get_workspace_id(api, WORKSPACE)))
@@ -84,10 +92,13 @@ if args.update_projects or db.new_db:
 
 print("Thumbing your Toggl timesheets into google sheet format...")
 
+insert_time = parse_iso(g_api.last_entered_date(default_datetime=START_DATE))
+
 grouped = group_by_date(
-    db.get_latest_time_entries(g_api.last_entered_date),
+    db.get_latest_time_entries(insert_time),
     settings["google_api"]["date_format"],
     args.round_up,
+    args.round_to_nearest,
 )
 published_values = list(grouped.values())
 
