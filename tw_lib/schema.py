@@ -2,7 +2,7 @@ SCHEMA = dict(
     project=[
         "id INT PRIMARY KEY NOT NULL",
         "wid INT NOT NULL",
-        "cid INT NOT NULL",
+        "cid INT",
         "name TEXT",
         "billable BOOL",
         "is_private BOOL",
