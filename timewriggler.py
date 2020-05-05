@@ -1,8 +1,9 @@
 #! /usr/bin/env python3
 
-import os
 import argparse
+import os
 import toml
+from datetime import datetime
 
 from tw_lib.api import TimesheetAPI
 from tw_lib.db import Database
@@ -54,6 +55,12 @@ parser.add_argument(
     help="If you want to store your config somewhere else.",
 )
 
+parser.add_argument(
+    "--start_date",
+    default=None,
+    help="If you want to specify the start_date yourself, time must be in ISO 8601.",
+)
+
 args = parser.parse_args()
 
 settings = toml.load(args.config)
@@ -61,6 +68,7 @@ SQLITE_DB = settings["local"]["sqlite_db"]
 TOGGL = settings["toggl"]
 GOOGLE_SETTINGS = settings["google_api"]
 WORKSPACE = TOGGL["workspace"]
+START_DATE = args.start_date
 
 api = TimesheetAPI(TOGGL["api_token"])
 g_api = GoogleAPI(**GOOGLE_SETTINGS)
@@ -68,7 +76,7 @@ db = Database(SQLITE_DB, bootstrap=args.bootstrap)
 
 if not args.preserve_time_entries or db.new_db:
     print("Updating the time entries...")
-    db.update_table("time_entries", api.get_time_entries())
+    db.update_table("time_entries", api.get_time_entries(start_date=START_DATE))
 if args.update_projects or db.new_db:
     print("Updating the projects...")
     db.update_table("project", api.get_projects(get_workspace_id(api, WORKSPACE)))

@@ -7,8 +7,8 @@ class TimesheetAPI:
         self._auth = HTTPBasicAuth(api_key, "api_token")
         self._headers = {"content-type": "application/json"}
 
-    def get_time_entries(self, start_time=None, end_time=None):
-        params = dict(start_time=start_time, end_time=end_time)
+    def get_time_entries(self, start_date=None, end_date=None):
+        params = dict(start_date=start_date, end_date=end_date)
         return self.run_query(
             url="https://toggl.com/api/v8/time_entries", params=params,
         )
