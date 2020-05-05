@@ -64,7 +64,10 @@ parser.add_argument(
 parser.add_argument(
     "--start_date",
     default=None,
-    help="If you want to specify the start_date yourself, time must be in ISO 8601.",
+    help=(
+        "If you want to specify the start_date yourself, you can specify just"
+        " the date, ie: 2020-05-01"
+    ),
 )
 
 args = parser.parse_args()

@@ -55,9 +55,10 @@ snowflake case:
 ```
 usage: timewriggler.py [-h] [--update_projects] [--bootstrap] [--dry_run]
                        [--preserve_time_entries] [--round_up]
-                       [--config CONFIG]
+                       [--round_to_nearest ROUND_TO_NEAREST] [--config CONFIG]
+                       [--start_date START_DATE]
 
-TimeWriggler - helping you sheet toggl into google.
+TimeWriggler - Helping you sheet Toggl into Google.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -72,5 +73,12 @@ optional arguments:
                         internal state for time entries.
   --round_up            This will ceiling the values, unless they are really
                         close to the hour.
+  --round_to_nearest ROUND_TO_NEAREST
+                        This will round the value up to the nearest value you
+                        specified.
   --config CONFIG       If you want to store your config somewhere else.
+  --start_date START_DATE
+                        If you want to specify the start_date yourself, you
+                        can specify just the date, ie: 2020-05-01
 ```
+
