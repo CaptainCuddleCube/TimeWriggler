@@ -21,8 +21,18 @@ def insert_query(table_name, row):
 
 def insert_table(conn, table_name, rows):
     for row in rows:
-        query = insert_query(table_name, row), list(row.values())
+        filtered_values = schema_values(table_name, row)
+        query = (
+            insert_query(table_name, filtered_values),
+            list(filtered_values.values()),
+        )
         conn.execute(*query)
+
+
+def schema_values(table_name, row):
+    schema = SCHEMA[table_name]
+    available_cols = [i.split(" ")[0] for i in schema]
+    return {k: row.get(k) for k in available_cols}
 
 
 def truncate_table(conn, table_name):
