@@ -6,7 +6,7 @@ workspace = "the workspace you want tracked"
 spreadsheet_id = "<insert the long ass sheet id>"
 credentials_file = "creds/credentials.json"
 token_file = "creds/token.pickle"
-project_sheet="Projects!A5:B"
+project_sheet="Projects!A4:B"
 time_sheet="timesheet!A2:D"
 date_format ="%Y-%m-%d"
 
