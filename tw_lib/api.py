@@ -13,6 +13,21 @@ class TimesheetAPI:
             url="https://toggl.com/api/v8/time_entries", params=params,
         )
 
+    def get_running_time_entry(self):
+        return self.run_query(url="https://www.toggl.com/api/v8/time_entries/current")
+
+    def stop_time_entry(self, time_entry_id):
+        return self.run_query(
+            url=f"https://toggl.com/api/v8/time_entries/{time_entry_id}/stop",
+            type="PUT",
+        )
+
+    def stop_running_entry(self):
+        running_entry = self.get_running_time_entry()
+        if running_entry["data"]:
+            return self.stop_time_entry(running_entry["data"]["id"])
+        return {"data": None}
+
     def get_projects(self, workspace_id):
         return self.run_query(
             url=f"https://toggl.com/api/v8/workspaces/{workspace_id}/projects"
@@ -21,10 +36,18 @@ class TimesheetAPI:
     def get_workspaces(self):
         return self.run_query(url="https://toggl.com/api/v8/workspaces")
 
-    def run_query(self, url, params=None):
-        resp = requests.get(
-            url=url, params=params, auth=self._auth, headers=self._headers,
-        )
+    def run_query(self, url, params=None, type="GET"):
+        if type == "GET":
+            resp = requests.get(
+                url=url, params=params, auth=self._auth, headers=self._headers,
+            )
+        elif type == "PUT":
+            resp = requests.put(
+                url=url, params=params, auth=self._auth, headers=self._headers,
+            )
+        else:
+            raise NotImplementedError("We haven't implemented this yet...")
+
         if not resp.ok:
             raise requests.exceptions.BaseHTTPError(
                 f"Got status code: {resp.status_code}"

@@ -83,32 +83,42 @@ api = TimesheetAPI(TOGGL["api_token"])
 g_api = GoogleAPI(**GOOGLE_SETTINGS)
 db = Database(SQLITE_DB, bootstrap=args.bootstrap)
 
-if not args.preserve_time_entries or db.new_db:
-    print("Updating the time entries...")
-    db.update_table("time_entries", api.get_time_entries(start_date=START_DATE))
-if args.update_projects or db.new_db:
-    print("Updating the projects...")
-    db.update_table("project", api.get_projects(get_workspace_id(api, WORKSPACE)))
-    db.update_table("project_name", g_api.available_projects)
 
-print("Thumbing your Toggl timesheets into google sheet format...")
+def run_timewriggler():
+    if not args.preserve_time_entries or db.new_db:
+        print("Stopping running entries...")
+        api.stop_running_entry()
+        print("Updating the time entries...")
+        db.update_table("time_entries", api.get_time_entries(start_date=START_DATE))
+    if args.update_projects or db.new_db:
+        print("Updating the projects...")
+        db.update_table("project", api.get_projects(get_workspace_id(api, WORKSPACE)))
+        db.update_table("project_name", g_api.available_projects)
 
-insert_time = parse_iso(g_api.last_entered_date(default_datetime=parse_iso(START_DATE)))
+    print("Thumbing your Toggl timesheets into google sheet format...")
 
-grouped = group_by_date(
-    db.get_latest_time_entries(insert_time),
-    settings["google_api"]["date_format"],
-    args.round_up,
-    args.round_to_nearest,
-)
-published_values = list(grouped.values())
+    insert_time = parse_iso(
+        g_api.last_entered_date(default_datetime=parse_iso(START_DATE))
+    )
 
-if args.dry_run:
-    print("Dry run results:")
-    print(published_values)
-elif len(published_values) > 0:
-    print(f"Sending times for days: {list(grouped.keys())}")
-    g_api.append_to_time_sheets(published_values)
-    print("Sent!")
-else:
-    print("No new timesheets available, you should probably do some work.")
+    grouped = group_by_date(
+        db.get_latest_time_entries(insert_time),
+        settings["google_api"]["date_format"],
+        args.round_up,
+        args.round_to_nearest,
+    )
+    published_values = list(grouped.values())
+
+    if args.dry_run:
+        print("Dry run results:")
+        print(published_values)
+    elif len(published_values) > 0:
+        print(f"Sending times for days: {list(grouped.keys())}")
+        g_api.append_to_time_sheets(published_values)
+        print("Sent!")
+    else:
+        print("No new timesheets available, you should probably do some work.")
+
+
+if __name__ == "__main__":
+    run_timewriggler()
