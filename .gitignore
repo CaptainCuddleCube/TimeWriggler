@@ -136,3 +136,4 @@ creds/*
 *.db
 .vscode
 tags
+test_venv

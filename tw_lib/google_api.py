@@ -2,9 +2,10 @@ import os
 import pickle
 from datetime import datetime, timedelta
 from itertools import product
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
+from typing import Dict, List
+from googleapiclient.discovery import build  # type: ignore
+from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore
+from google.auth.transport.requests import Request  # type: ignore
 
 
 class GoogleAPI:
@@ -16,12 +17,12 @@ class GoogleAPI:
 
     def __init__(
         self,
-        spreadsheet_id,
-        credentials_file,
-        token_file,
-        project_sheet,
-        time_sheet,
-        date_format,
+        spreadsheet_id: str,
+        credentials_file: str,
+        token_file: str,
+        project_sheet: str,
+        time_sheet: str,
+        date_format: str,
     ):
         self._project_sheet = project_sheet
         self._time_sheet = time_sheet
@@ -53,27 +54,27 @@ class GoogleAPI:
                 pickle.dump(creds, token)
         return creds
 
-    def _run_get_query(self, range):
+    def _run_get_query(self, range: str) -> Dict:
         service = build("sheets", "v4", credentials=self._creds)
         # Call the Sheets API
         sheet = service.spreadsheets()
         return sheet.values().get(spreadsheetId=self._sheet_id, range=range).execute()
 
     @property
-    def projects(self):
+    def projects(self) -> Dict:
         """
         get all the projects
         """
         result = self._run_get_query(range=self._project_sheet)
-        projects = {"projects": [], "tasks": []}
+        _projects: Dict = {"projects": [], "tasks": []}
         for i in result.get("values", []):
             if len(i) > 1:
-                projects["tasks"].append(i[1])
-            projects["projects"].append(i[0])
-        return projects
+                _projects["tasks"].append(i[1])
+            _projects["projects"].append(i[0])
+        return _projects
 
     @property
-    def available_projects(self):
+    def available_projects(self) -> List[Dict]:
         sheets_projects = self.projects
         return [
             {"id": i, "name": " | ".join(v)}
@@ -82,19 +83,19 @@ class GoogleAPI:
             )
         ]
 
-    def get_time_sheets(self):
+    def get_time_sheets(self) -> Dict:
         result = self._run_get_query(range="timesheet!A2:D")
         values = result.get("values", [])
         for i in values:
             i[0] = datetime.strptime(i[0], self._date_format).isoformat()
         return values
 
-    def append_to_time_sheets(self, data):
+    def append_to_time_sheets(self, data: Dict) -> List:
         """
         Append values to the timesheet
         """
         service = build("sheets", "v4", credentials=self._creds)
-        body = {"range": self._time_sheet, "values": data}
+        body: Dict = {"range": self._time_sheet, "values": data}
 
         # Call the Sheets API
         sheet = service.spreadsheets()
@@ -110,7 +111,7 @@ class GoogleAPI:
         )
         return result.get("values", [])
 
-    def last_entered_date(self, default_datetime=None):
+    def last_entered_date(self, default_datetime: datetime = None) -> str:
         current_timesheets = self.get_time_sheets()
         if len(current_timesheets) == 0:
             if default_datetime:

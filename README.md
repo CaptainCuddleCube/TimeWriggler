@@ -25,6 +25,7 @@ _Works on the streets, freak in the sheets._
 - A computer.
 - An internet connection.
 - A Toggl [account](https://toggl.com/) (it is free, you cheapskate).
+- pip install requirements using `pip install -r requirements/base.txt`.
 
 ### Setting up your Toggl projects
 
@@ -81,4 +82,3 @@ optional arguments:
                         If you want to specify the start_date yourself, you
                         can specify just the date, ie: 2020-05-01
 ```
-
