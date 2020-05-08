@@ -38,4 +38,6 @@ def get_workspace_id(api, workspace_name):
 
 
 def parse_iso(iso_date):
+    if iso_date is None:
+        return None
     return datetime.fromisoformat(iso_date).astimezone()

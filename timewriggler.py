@@ -77,7 +77,7 @@ SQLITE_DB = settings["local"]["sqlite_db"]
 TOGGL = settings["toggl"]
 GOOGLE_SETTINGS = settings["google_api"]
 WORKSPACE = TOGGL["workspace"]
-START_DATE = parse_iso(args.start_date) if args.start_date else None
+START_DATE = parse_iso(args.start_date).isoformat() if args.start_date else None
 
 api = TimesheetAPI(TOGGL["api_token"])
 g_api = GoogleAPI(**GOOGLE_SETTINGS)
@@ -85,9 +85,7 @@ db = Database(SQLITE_DB, bootstrap=args.bootstrap)
 
 if not args.preserve_time_entries or db.new_db:
     print("Updating the time entries...")
-    db.update_table(
-        "time_entries", api.get_time_entries(start_date=START_DATE.isoformat())
-    )
+    db.update_table("time_entries", api.get_time_entries(start_date=START_DATE))
 if args.update_projects or db.new_db:
     print("Updating the projects...")
     db.update_table("project", api.get_projects(get_workspace_id(api, WORKSPACE)))
@@ -95,7 +93,7 @@ if args.update_projects or db.new_db:
 
 print("Thumbing your Toggl timesheets into google sheet format...")
 
-insert_time = parse_iso(g_api.last_entered_date(default_datetime=START_DATE))
+insert_time = parse_iso(g_api.last_entered_date(default_datetime=parse_iso(START_DATE)))
 
 grouped = group_by_date(
     db.get_latest_time_entries(insert_time),
