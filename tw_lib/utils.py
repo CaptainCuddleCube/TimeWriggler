@@ -22,7 +22,7 @@ def group_by_date(data, date_format, round_up=False, round_to_nearest=None):
                 task,
                 entry["duration"] / 60 / 60,
             ]
-    round_to_nearest = 1 if round_up else round_to_nearest
+    round_to_nearest = 1 if round_up and round_to_nearest is None else round_to_nearest
 
     if round_to_nearest is not None:
         for v in group_by_date.values():
