@@ -11,7 +11,10 @@ def group_by_date(data, date_format, round_up=False, round_to_nearest=None):
     group_by_date = {}
     for entry in data:
         date = datetime.fromisoformat(entry["start"]).date().strftime(date_format)
-        project, task = entry["name"].split(" | ")
+        try:
+            project, task = entry["name"].split(" | ")
+        except ValueError:
+            ValueError(f"The project with the name {entry['name']} is malformed!")
         if f"{date}|{project}|{task}" in group_by_date and entry["duration"] > 0:
             group_by_date[f"{date}|{project}|{task}"][-1] += entry["duration"] / 60 / 60
         elif entry["duration"] > 0:

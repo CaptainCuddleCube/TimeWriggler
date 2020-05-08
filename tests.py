@@ -44,12 +44,19 @@ def get_time_entries():
                     "start": "2020-05-08T13:05:50+00:00",
                     "duration": 684,
                 },
+                {
+                    "id": 4,
+                    "pid": 3,
+                    "start": "2020-05-08T13:05:50+00:00",
+                    "duration": 3600,
+                },
             ]
         elif url == "https://toggl.com/api/v8/workspaces/1/projects":
             mock_response.ok = True
             mock_response.json.return_value = [
                 {"id": 1, "wid": 1, "name": "Project | Task"},
-                {"id": 2, "wid": 3, "name": "Project 2 | Task 2"},
+                {"id": 2, "wid": 1, "name": "Project 2 | Task 2"},
+                {"id": 3, "wid": 1, "name": "Invisible Project | Task"},
             ]
         else:
             mock_response.status_code = 404
