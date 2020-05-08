@@ -89,6 +89,42 @@ def seeded_db(mocker, timesheet_api, db, get_time_entries, available_projects):
     return db
 
 
+@pytest.fixture
+def toggl_stop_recording():
+    def wrapper(running_task=True):
+        def generator(*args, url, **kwargs):
+            mock_response = mock.Mock()
+            if url == "https://www.toggl.com/api/v8/time_entries/current":
+                mock_response.ok = True
+                mock_response.json.return_value = (
+                    {"data": {"id": 1,}} if running_task else {"data": None}
+                )
+            elif url == "https://toggl.com/api/v8/time_entries/1/stop":
+                mock_response.ok = True
+                mock_response.json.return_value = {"data": None}
+            return mock_response
+
+        return generator
+
+    return wrapper
+
+
+def test_stopper_running_task(mocker, timesheet_api, toggl_stop_recording):
+    mock_get = mocker.patch("requests.get")
+    mock_get.side_effect = toggl_stop_recording(running_task=True)
+    mock_put = mocker.patch("requests.put")
+    mock_put.side_effect = toggl_stop_recording(running_task=True)
+    assert timesheet_api.stop_running_entry() == {"data": None}
+
+
+def test_stopper_no_running_task(mocker, timesheet_api, toggl_stop_recording):
+    mock_get = mocker.patch("requests.get")
+    mock_get.side_effect = toggl_stop_recording(running_task=False)
+    mock_put = mocker.patch("requests.put")
+    mock_put.side_effect = toggl_stop_recording(running_task=False)
+    assert timesheet_api.stop_running_entry() == {"data": None}
+
+
 def test_parse_iso():
     dt = datetime(year=2020, month=5, day=1).astimezone()
     assert parse_iso("2020-05-01") == dt
