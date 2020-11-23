@@ -4,10 +4,10 @@ import argparse
 import os
 import toml
 
-from tw_lib.api import TimesheetAPI
-from tw_lib.db import Database
-from tw_lib.google_api import GoogleAPI
-from tw_lib.utils import group_by_date, get_workspace_id, parse_iso
+from .tw_lib.api import TimesheetAPI
+from .tw_lib.db import Database
+from .tw_lib.google_api import GoogleAPI
+from .tw_lib.utils import group_by_date, get_workspace_id, parse_iso
 
 parser = argparse.ArgumentParser(
     description="TimeWriggler - Helping you sheet Toggl into Google."

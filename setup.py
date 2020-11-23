@@ -43,4 +43,7 @@ setuptools.setup(
         "urllib3==1.25.9",
     ],
     tests_requires=["pytest==6.1.2", "mypy==0.770", "mypy-extensions==0.4.3"],
+    entry_points={
+        "console_scripts": ["timewriggler = timewriggler.__main__:run_timewriggler"]
+    },
 )
