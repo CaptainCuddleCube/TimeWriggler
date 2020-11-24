@@ -34,6 +34,7 @@ setuptools.setup(
         "pyasn1==0.4.8",
         "pyasn1-modules==0.2.8",
         "pytz==2020.1",
+        "typer==0.3.2",
         "requests==2.23.0",
         "requests-oauthlib==1.3.0",
         "rsa==4.0",
@@ -43,7 +44,5 @@ setuptools.setup(
         "urllib3==1.25.9",
     ],
     tests_requires=["pytest==6.1.2", "mypy==0.770", "mypy-extensions==0.4.3"],
-    entry_points={
-        "console_scripts": ["timewriggler = timewriggler.__main__:run_timewriggler"]
-    },
+    entry_points={"console_scripts": ["timewriggler = timewriggler.__main__:app"]},
 )
