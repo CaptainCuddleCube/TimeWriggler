@@ -60,10 +60,10 @@ def run_setup():
     config["google_api"] = google_api
     typer.echo("\nThese are your current settings:")
     typer.echo(toml.dumps(config))
-    if not typer.prompt(f"Are you happy with these settings?", type=bool):
+    if not typer.prompt("Are you happy with these settings?", type=bool):
         raise typer.Abort()
-    with open(CONFIG_PATH, "w") as f:
-        toml.dump(config, f)
+    with open(CONFIG_PATH, "w") as file:
+        toml.dump(config, file)
 
 
 @app.command()
@@ -74,15 +74,15 @@ def show_config():
 @app.command()
 def set_date_format(date_fmt: str):
     CONFIG["google_api"]["date_format"] = date_fmt
-    with open(CONFIG_PATH, "w") as f:
-        toml.dump(CONFIG, f)
+    with open(CONFIG_PATH, "w") as file:
+        toml.dump(CONFIG, file)
 
 
 @app.command()
 def set_sheet_id(sheet_id: str):
     CONFIG["google_api"]["spreadsheet_id"] = sheet_id
-    with open(CONFIG_PATH, "w") as f:
-        toml.dump(CONFIG, f)
+    with open(CONFIG_PATH, "w") as file:
+        toml.dump(CONFIG, file)
 
 
 if __name__ == "__main__":

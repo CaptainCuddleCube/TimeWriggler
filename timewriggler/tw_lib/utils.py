@@ -1,5 +1,4 @@
 from datetime import datetime
-from .db import insert_table, truncate_table
 from math import ceil, isclose
 
 

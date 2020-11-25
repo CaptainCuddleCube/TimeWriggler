@@ -1,10 +1,4 @@
-#! /usr/bin/env python3
-
-import argparse
-import os
 import toml
-from pathlib import Path
-
 import typer
 
 from .tw_lib.api import TimesheetAPI
