@@ -115,10 +115,10 @@ class GoogleAPI:
         current_timesheets = self.get_time_sheets()
         if len(current_timesheets) == 0:
             if default_datetime:
-                return default_datetime.strftime(self._date_format)
+                return default_datetime.isoformat()
             now = datetime.now().date()
             return (
                 datetime(year=now.year, month=now.month, day=1) - timedelta(days=1)
-            ).strftime(self._date_format)
+            ).isoformat()
 
         return current_timesheets[-1][0]

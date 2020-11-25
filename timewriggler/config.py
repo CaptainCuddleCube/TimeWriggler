@@ -71,5 +71,19 @@ def show_config():
     typer.echo(toml.dumps(CONFIG))
 
 
+@app.command()
+def set_date_format(date_fmt: str):
+    CONFIG["google_api"]["date_format"] = date_fmt
+    with open(CONFIG_PATH, "w") as f:
+        toml.dump(CONFIG, f)
+
+
+@app.command()
+def set_sheet_id(sheet_id: str):
+    CONFIG["google_api"]["spreadsheet_id"] = sheet_id
+    with open(CONFIG_PATH, "w") as f:
+        toml.dump(CONFIG, f)
+
+
 if __name__ == "__main__":
     app()

@@ -22,7 +22,7 @@ WORKSPACE = TOGGL["workspace"]
 
 
 app = typer.Typer(help="TimeWriggler - Helping you sheet Toggl into Google.")
-app.add_typer(config_app, name="config")
+app.add_typer(config_app, name="configure")
 
 
 @app.command(help="Friendly command to help you upload your sheets")
@@ -36,6 +36,12 @@ def upload(
     g_api = GoogleAPI(**GOOGLE_SETTINGS)
     db = Database("file::memory:?cache=shared", bootstrap=True)
     parsed_start = parse_iso(start_date).isoformat() if start_date else None
+    workspaces = [i["name"] for i in api.get_workspaces()]
+    if WORKSPACE not in workspaces:
+        typer.echo(
+            f"The workspace {WORKSPACE} does not exist, the options are:{workspaces}"
+        )
+        raise typer.Abort()
     typer.echo("Stopping running entries...")
     api.stop_running_entry()
     typer.echo("Updating the time entries...")
