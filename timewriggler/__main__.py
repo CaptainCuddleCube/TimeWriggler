@@ -9,10 +9,6 @@ from .constants import CONFIG_PATH
 from .config import app as config_app
 
 
-settings = toml.load(CONFIG_PATH)
-TOGGL = settings["toggl"]
-GOOGLE_SETTINGS = settings["google_api"]
-WORKSPACE = TOGGL["workspace"]
 
 
 app = typer.Typer(help="TimeWriggler - Helping you sheet Toggl into Google.")
@@ -26,6 +22,10 @@ def update_timesheet(
     round_to_nearest: float = typer.Option(None),
     round_up: bool = typer.Option(False),
 ):
+    settings = toml.load(CONFIG_PATH)
+    TOGGL = settings["toggl"]
+    GOOGLE_SETTINGS = settings["google_api"]
+    WORKSPACE = TOGGL["workspace"]
     api = TimesheetAPI(TOGGL["api_token"])
     g_api = GoogleAPI(**GOOGLE_SETTINGS)
     db = Database("file::memory:?cache=shared", bootstrap=True)
