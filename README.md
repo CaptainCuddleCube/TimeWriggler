@@ -44,7 +44,7 @@ Keep that `credentials.json` super safe - like the `creds/` directory (which is 
 
 You can install TimeWriggler straight into your terminal using:
 ```
-pip install get+https://github.com/CaptainCuddleCube/TimeWriggler.git 
+pip install git+https://github.com/CaptainCuddleCube/TimeWriggler.git
 ```
 
 If everything is installed and ready, just use `timewriggler --help` to start.
