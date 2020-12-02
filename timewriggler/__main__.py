@@ -23,6 +23,10 @@ def update_timesheet(
     round_up: bool = typer.Option(False),
 ):
     settings = toml.load(CONFIG_PATH)
+    if settings == {}:
+        typer.echo("Settings not configured!")
+        raise typer.Abort()
+
     TOGGL = settings["toggl"]
     GOOGLE_SETTINGS = settings["google_api"]
     WORKSPACE = TOGGL["workspace"]
