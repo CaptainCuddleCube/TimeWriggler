@@ -40,45 +40,44 @@ To use TimeWriggler, you will need to setup a Google API Project, and get yourse
 which you can create [here](https://console.developers.google.com/flows/enableapi?apiid=appsactivity&credential=client_key), or via the [express-route](https://developers.google.com/sheets/api/quickstart/python) (recommended).
 Keep that `credentials.json` super safe - like the `creds/` directory (which is git ignored for your convenience).
 
+### Installing
+
+You can install TimeWriggler straight into your terminal using:
+```
+pip install get+https://github.com/CaptainCuddleCube/TimeWriggler.git 
+```
+
+If everything is installed and ready, just use `timewriggler --help` to start.
+
 ### Configuration
 
-TimeWriggler uses TOML for its configuration, and you can see an example of this in `example.config.toml`. Once you have
-all the values needed to run your config - just rename it to `config.toml` and you will be good to go.
-
-By default, you should just leave the sqlite3 db as an in-memory database - that way is should clean itself up when done.
-If, however, you have a massive number of projects, or you want to persist things, then opt to use a stored database.
-
-### Running
-
-Once you are all configured, just run `./timewriggler.py`, and you can add your favourite settings to get it to run for your
-snowflake case:
+TimeWriggler has a nice and friendly `configure` subcommand to help you set up things.
 
 ```
-usage: timewriggler.py [-h] [--update_projects] [--bootstrap] [--dry_run]
-                       [--preserve_time_entries] [--round_up]
-                       [--round_to_nearest ROUND_TO_NEAREST] [--config CONFIG]
-                       [--start_date START_DATE]
+timewriggler configure run-setup
+```
 
-TimeWriggler - Helping you sheet Toggl into Google.
 
-optional arguments:
-  -h, --help            show this help message and exit
-  --update_projects     If you have made any changes to your toggl projects,
-                        use this command.
-  --bootstrap           Want to start from scratch? This will trash the local
-                        database.
-  --dry_run             Not sure this will work? Check out what will be
-                        uploaded!
-  --preserve_time_entries
-                        While testing, you might just want to use the system's
-                        internal state for time entries.
-  --round_up            This will ceiling the values, unless they are really
-                        close to the hour.
-  --round_to_nearest ROUND_TO_NEAREST
-                        This will round the value up to the nearest value you
-                        specified.
-  --config CONFIG       If you want to store your config somewhere else.
-  --start_date START_DATE
-                        If you want to specify the start_date yourself, you
-                        can specify just the date, ie: 2020-05-01
+### Updating timesheet
+
+Once you are all configured, just run `timewriggler update-timesheet --help`, and you can see your favourite settings to get it to run for your
+snowflake case:
+```
+timewriggler update-timesheet --help
+Usage: timewriggler update-timesheet [OPTIONS]
+
+  Friendly command to help you update your sheets
+
+Options:
+  --start-date TEXT
+  --dry-run / --no-dry-run    [default: False]
+  --round-to-nearest FLOAT
+  --round-up / --no-round-up  [default: False]
+  --help                      Show this message and exit.
+```
+
+example:
+
+```
+timewriggler update-timesheet --round-to-nearest 0.25 --round-up --start-date 2020-11-30 --dry-run
 ```
