@@ -19,8 +19,8 @@ app = typer.Typer(help="TimeWriggler - Helping you sheet Toggl into Google.")
 app.add_typer(config_app, name="configure")
 
 
-@app.command(help="Friendly command to help you upload your sheets")
-def upload(
+@app.command(help="Friendly command to help you update your sheets")
+def update_timesheet(
     start_date: str = typer.Option(None),
     dry_run: bool = typer.Option(False),
     round_to_nearest: float = typer.Option(None),
