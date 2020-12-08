@@ -20,7 +20,9 @@ def run_setup():
     typer.echo("First, we will need some toggl information")
     toggl = CONFIG["toggl"] if "toggl" in CONFIG else {}
     toggl["api_token"] = typer.prompt(
-        "What is your toggl API token?", type=str, default=toggl.get("api_token")
+        "What is your toggl API token? "
+        "(Toggle -> Reports -> Profile Settings -> API Token)",
+        type=str, default=toggl.get("api_token")
     )
     toggl["workspace"] = typer.prompt(
         "What workspace do you want tracked?", type=str, default=toggl.get("workspace")
@@ -30,17 +32,19 @@ def run_setup():
     typer.echo("Now we need some of your google api information")
     google_api = CONFIG["google_api"] if "google_api" in CONFIG else {}
     google_api["spreadsheet_id"] = typer.prompt(
-        "What is the sheet id?", type=str, default=google_api.get("spreadsheet_id")
+        "What is the Google sheet id to write to? "
+        "(eg: https://docs.google.com/spreadsheets/d/<sheet_id>/edit)",
+        type=str, default=google_api.get("spreadsheet_id")
     )
     google_api["credentials_file"] = typer.prompt(
-        "where is the credentials file? eg: creds/credentials.json",
+        "Where is the credentials file?",
         type=str,
-        default=google_api.get("credentials_file"),
+        default=google_api.get("credentials_file", "creds/credentials.json"),
     )
     google_api["token_file"] = typer.prompt(
-        "where is the token file? eg: creds/token.pickle",
+        "Where should the token file be persisted?",
         type=str,
-        default=google_api.get("token_file"),
+        default=google_api.get("token_file", "creds/token.py"),
     )
     google_api["project_sheet"] = typer.prompt(
         "Where are the project sheets? (the default should work 99% of the time)",
@@ -53,15 +57,14 @@ def run_setup():
         default=google_api.get("time_sheet", "timesheet!A2:D"),
     )
     google_api["date_format"] = typer.prompt(
-        "What is the date format? Note; this is really important for parsring",
+        "What is the date format? Note: this is really important for parsing",
         type=str,
         default=google_api.get("date_format", "%Y-%m-%d"),
     )
     config["google_api"] = google_api
     typer.echo("\nThese are your current settings:")
     typer.echo(toml.dumps(config))
-    if not typer.prompt("Are you happy with these settings?", type=bool):
-        raise typer.Abort()
+    typer.confirm("Are you happy with these settings?", abort=True)
     with open(CONFIG_PATH, "w") as file:
         toml.dump(config, file)
 

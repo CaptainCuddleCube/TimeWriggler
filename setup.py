@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="timewriggler",
-    version="2.0.0",
+    version="2.0.1",
     author="Ashton Hudson",
     author_email="ashton@dataprophet.com",
     description="Let's wriggle them timesheets into Google Sheets.",
