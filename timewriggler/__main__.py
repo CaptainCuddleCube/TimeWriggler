@@ -1,15 +1,12 @@
 import toml
 import typer
 
+from .config import app as config_app
+from .constants import CONFIG_PATH
 from .tw_lib.api import TimesheetAPI
 from .tw_lib.db import Database
 from .tw_lib.google_api import GoogleAPI
-from .tw_lib.utils import group_by_date, get_workspace_id, parse_iso
-from .constants import CONFIG_PATH
-from .config import app as config_app
-
-
-
+from .tw_lib.utils import get_workspace_id, group_by_date, parse_iso
 
 app = typer.Typer(help="TimeWriggler - Helping you sheet Toggl into Google.")
 app.add_typer(config_app, name="configure")
