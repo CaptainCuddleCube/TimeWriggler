@@ -1,6 +1,9 @@
 import os
 import sqlite3
-from typing import Callable, List, Dict, Tuple
+from typing import Callable, Dict, List, Tuple
+
+import typer
+
 from .schema import SCHEMA
 
 
@@ -70,6 +73,7 @@ class Database:
     def get_latest_time_entries(
         self, start_time: str, row_factory: Callable = dict_factory
     ):
+        self.validate_projects(start_time)
         with sqlite3.connect(self._db_name) as conn:
             conn.row_factory = dict_factory
             data = conn.execute(
@@ -81,6 +85,27 @@ class Database:
                 (start_time,),
             ).fetchall()
         return data
+
+    def validate_projects(self, start_time):
+        with sqlite3.connect(self._db_name) as conn:
+            conn.row_factory = dict_factory
+            data = conn.execute(
+                """
+                SELECT DISTINCT(name) as name
+                FROM time_entries LEFT JOIN project ON pid=project.id
+                WHERE DATE(start) > ? AND NOT name IN (SELECT name FROM project_name);
+                """,
+                (start_time,),
+            ).fetchall()
+        if data:
+            typer.echo(
+                typer.style(
+                    "Some Toggl projects aren't in the timesheet, "
+                    + "proceeding without them:\n"
+                    + "\n".join([d["name"] for d in data]),
+                    fg="red",
+                )
+            )
 
     def update_table(self, table: str, values: Dict) -> None:
         with sqlite3.connect(self._db_name) as conn:
