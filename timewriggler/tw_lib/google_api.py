@@ -3,9 +3,12 @@ import pickle
 from datetime import datetime, timedelta
 from itertools import product
 from typing import Dict, List
-from googleapiclient.discovery import build  # type: ignore
-from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore
+
+from dateutil import parser
+
 from google.auth.transport.requests import Request  # type: ignore
+from google_auth_oauthlib.flow import InstalledAppFlow  # type: ignore
+from googleapiclient.discovery import build  # type: ignore
 
 
 class GoogleAPI:
@@ -87,7 +90,7 @@ class GoogleAPI:
         result = self._run_get_query(range="timesheet!A2:D")
         values = result.get("values", [])
         for i in values:
-            i[0] = datetime.strptime(i[0], self._date_format).isoformat()
+            i[0] = parser.parse(i[0]).isoformat()
         return values
 
     def append_to_time_sheets(self, data: Dict) -> List:
