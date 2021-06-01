@@ -3,6 +3,8 @@ from requests.auth import HTTPBasicAuth
 
 
 class TimesheetAPI:
+    domain = "https://api.track.toggl.com"
+
     def __init__(self, api_key: str):
         self._auth = HTTPBasicAuth(api_key, "api_token")
         self._headers = {"content-type": "application/json"}
@@ -10,15 +12,15 @@ class TimesheetAPI:
     def get_time_entries(self, start_date: str = None, end_date: str = None) -> dict:
         params = dict(start_date=start_date, end_date=end_date)
         return self.run_query(
-            url="https://toggl.com/api/v8/time_entries", params=params,
+            url=f"{self.domain}/api/v8/time_entries", params=params,
         )
 
     def get_running_time_entry(self) -> dict:
-        return self.run_query(url="https://www.toggl.com/api/v8/time_entries/current")
+        return self.run_query(url=f"{self.domain}/api/v8/time_entries/current")
 
     def stop_time_entry(self, time_entry_id: int) -> dict:
         return self.run_query(
-            url=f"https://toggl.com/api/v8/time_entries/{time_entry_id}/stop",
+            url=f"{self.domain}/api/v8/time_entries/{time_entry_id}/stop",
             type="PUT",
         )
 
@@ -30,11 +32,11 @@ class TimesheetAPI:
 
     def get_projects(self, workspace_id: int) -> dict:
         return self.run_query(
-            url=f"https://toggl.com/api/v8/workspaces/{workspace_id}/projects"
+            url=f"{self.domain}/api/v8/workspaces/{workspace_id}/projects"
         )
 
     def get_workspaces(self) -> dict:
-        return self.run_query(url="https://toggl.com/api/v8/workspaces")
+        return self.run_query(url=f"{self.domain}/api/v8/workspaces")
 
     def run_query(self, url, params: dict = None, type: str = "GET") -> dict:
         if type == "GET":
